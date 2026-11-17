@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PoseAtlas</title>
+<meta name="description" content="PoseAtlas: A Multi-View Synthetic Human Dataset with Geometrically Grounded Poses for 3D Pose Estimation (WACV 2027, Datasets Track).">
+<style>
+  :root{
+    --bg:#ffffff; --fg:#1a1a1a; --muted:#6b6b6b; --accent:#2f5fd1; --card:#f5f6f8; --border:#e3e5e9;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{ --bg:#15161a; --fg:#e8e8ea; --muted:#9b9ba3; --accent:#7ea2ff; --card:#1d1f24; --border:#2a2c32; }
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0; background:var(--bg); color:var(--fg);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    line-height:1.6;
+  }
+  .wrap{max-width:860px; margin:0 auto; padding:48px 20px 80px;}
+  header{text-align:center; margin-bottom:28px;}
+  h1{font-size:2.1rem; margin:0 0 10px; letter-spacing:-0.01em;}
+  .subtitle{color:var(--muted); font-size:1.05rem; margin:0 0 18px;}
+  .venue{display:inline-block; font-size:0.85rem; color:var(--muted); border:1px solid var(--border); border-radius:999px; padding:4px 14px; margin-bottom:18px;}
+  .authors{color:var(--muted); font-size:0.95rem; margin-bottom:6px;}
+  .badges{display:flex; gap:10px; justify-content:center; flex-wrap:wrap; margin:18px 0 8px;}
+  .badge{
+    display:inline-flex; align-items:center; gap:6px;
+    padding:8px 16px; border-radius:8px; font-size:0.9rem; text-decoration:none;
+    border:1px solid var(--border); color:var(--fg); background:var(--card);
+  }
+  .badge.disabled{color:var(--muted); cursor:default;}
+  .badge.primary{background:var(--accent); color:#fff; border-color:var(--accent);}
+  .teaser{width:100%; border-radius:10px; border:1px solid var(--border); margin:28px 0;}
+  .fig{width:100%; border-radius:10px; border:1px solid var(--border); margin:14px 0;}
+  .fig-row{display:flex; gap:14px; flex-wrap:wrap; margin:14px 0;}
+  .fig-row .fig{flex:1 1 260px; margin:0;}
+  .fig-caption{color:var(--muted); font-size:0.85rem; text-align:center; margin:-4px 0 18px;}
+  section{margin:36px 0;}
+  h2{font-size:1.25rem; margin:0 0 12px; border-bottom:1px solid var(--border); padding-bottom:8px;}
+  h3{font-size:1.02rem; margin:22px 0 8px;}
+  p{color:var(--fg);}
+  ul{padding-left:1.2em;}
+  li{margin-bottom:6px;}
+  .muted{color:var(--muted);}
+  table{width:100%; border-collapse:collapse; font-size:0.85rem; margin:12px 0;}
+  th,td{border:1px solid var(--border); padding:6px 8px; text-align:center;}
+  th{background:var(--card);}
+  td:nth-child(2), th:nth-child(2){text-align:left;}
+  pre{
+    background:var(--card); border:1px solid var(--border); border-radius:8px;
+    padding:16px; overflow-x:auto; font-size:0.85rem;
+  }
+  code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;}
+  footer{text-align:center; color:var(--muted); font-size:0.85rem; margin-top:60px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="venue">WACV 2027 &middot; Datasets Track</div>
+    <h1>PoseAtlas</h1>
+    <p class="subtitle">A Multi-View Synthetic Human Dataset with Geometrically Grounded Poses for 3D Pose Estimation</p>
+
+    <div class="badges">
+      <span class="badge disabled">Paper (coming soon)</span>
+      <span class="badge disabled">🤗 Dataset (coming soon)</span>
+      <a class="badge primary" href="https://github.com/wjmenu/PoseAtlas">GitHub (code coming soon)</a>
+    </div>
+  </header>
+
+  <img class="teaser" src="assets/teaser.png" alt="PoseAtlas overview: canonical-pose reference identities, AMASS target poses, and refined multi-view outputs">
+
+  <section id="abstract">
+    <h2>Abstract</h2>
+    <p>
+      Existing real-world human pose datasets provide limited diversity in identities, poses, and
+      multi-view observations, constraining the variability available for training robust 2D and
+      3D pose estimation models. PoseAtlas addresses this challenge through a geometry-grounded
+      synthetic human dataset generation pipeline that provides diverse identities with poses
+      sampled from motion-capture data. Each identity is instantiated as a 3D avatar, posed and
+      rendered from multiple calibrated viewpoints by a feed-forward human reconstruction model.
+      The resulting renderings are refined by a dual spatial-control flow-matching model that
+      improves visual realism while conditioning on projected avatar geometry and body-part
+      segmentation. Reinforcement learning further promotes both pose consistency and perceptual
+      quality. The generated dataset contains more than 1,000,000 images from 48K synthesized
+      identities across eight calibrated viewpoints. Each image is paired with SMPL-X annotations
+      derived directly from the underlying 3D geometry. Evaluation with independent 2D pose
+      estimators demonstrates that the underlying geometry remains recoverable from the generated
+      images, while training under the SMPLer-X benchmark protocol shows that PoseAtlas transfers
+      as training data. PoseAtlas also achieves strong visual quality compared to other synthetic
+      human datasets.
+    </p>
+  </section>
+
+  <section id="method">
+    <h2>Generation Pipeline</h2>
+    <img class="fig" src="assets/pncc_multiview_rgb_6x2_clean.png" alt="Multi-view PNCC and RGB rendering examples">
+    <p class="fig-caption">Calibrated multi-view PNCC geometry and refined RGB renders sharing a common 3D reference.</p>
+    <ul>
+      <li><strong>Reference identity in canonical T-pose</strong> — a FLUX-based flow-matching
+        generator synthesizes each identity from an attribute prompt (age, ethnicity, gender
+        presentation, clothing, hairstyle, body shape), conditioned on a PNCC map of a canonical
+        T-pose SMPL-X body.</li>
+      <li><strong>AMASS target pose sampling</strong> — target poses are sampled from the AMASS
+        motion-capture archive and retargeted onto each identity's SMPL-X shape.</li>
+      <li><strong>Multi-view avatar rendering</strong> — a feed-forward avatar reconstruction
+        model (LHM++) instantiates the posed identity as 3D Gaussians anchored to the canonical
+        SMPL-X surface and renders it from multiple calibrated orbital viewpoints.</li>
+      <li><strong>Dual spatial-control refinement</strong> — a condition-injection flow-matching
+        transformer refines each render, conditioned on PNCC geometry, body-part segmentation,
+        and the attribute prompt, trained with a GRPO objective combining pose and preference
+        rewards.</li>
+    </ul>
+    <img class="fig" src="assets/pair_pncc_seg_rgb_3x2_clean.png" alt="Dual PNCC and segmentation conditioning example">
+    <p class="fig-caption">Dual spatial control: PNCC geometry + body-part segmentation condition the refinement stage.</p>
+  </section>
+
+  <section id="stats">
+    <h2>Dataset Statistics</h2>
+    <table>
+      <tr><th>Property</th><th>Value</th></tr>
+      <tr><td>Total images</td><td>1,000,120</td></tr>
+      <tr><td>Synthesized identities</td><td>47,625</td></tr>
+      <tr><td>Calibrated viewpoints per pose</td><td>8</td></tr>
+      <tr><td>Image resolution</td><td>1024 &times; 2048</td></tr>
+      <tr><td>Annotations</td><td>SMPL-X parameters + camera calibration, from 3D geometry</td></tr>
+    </table>
+    <div class="fig-row">
+      <img class="fig" src="assets/ethnicity_broad_pie.png" alt="Identity ethnicity distribution">
+      <img class="fig" src="assets/world_age_distribution_18plus.png" alt="Identity age distribution">
+    </div>
+    <p class="fig-caption">Identity diversity across the synthesized population (ethnicity, age).</p>
+  </section>
+
+  <section id="results">
+    <h2>Results</h2>
+    <img class="fig" src="assets/domain_gap_grid_shhq_full750_baselines_stageA.png" alt="Visual comparison against baseline synthetic human datasets">
+    <p class="fig-caption">Visual comparison against existing synthetic human dataset baselines.</p>
+    <ul>
+      <li><strong>3D pose transfer (SMPLer-X protocol):</strong> training on a PoseAtlas + BEDLAM
+        mixture (70/30) performs comparably to the strongest training mixtures on AGORA and 3DPW
+        (within 0.3&nbsp;mm of the lowest error), reaching 77.3 PVE / 107.1 MPE on EHF versus
+        78.7 / 108.3 for the closest alternative.</li>
+      <li><strong>2D pose fidelity:</strong> independent 2D keypoint estimators recover the
+        intended geometry with mean OKS ranging 0.528&ndash;0.798 (Sapiens-2B highest across all
+        regions), evaluated against keypoints projected from the source SMPL-X geometry.</li>
+      <li><strong>Multi-view 3D consistency:</strong> MPJPE decreases consistently as views are
+        added, reaching 24.2&nbsp;mm with all 8 calibrated views.</li>
+      <li><strong>Visual quality:</strong> Inception Score 9.58, FID 1.82 &mdash; comparable to the
+        strongest evaluated synthetic human dataset baseline.</li>
+    </ul>
+  </section>
+
+  <section id="limitations">
+    <h2>Limitations</h2>
+    <p>
+      Fine-grained facial identity is less stable across views than body geometry, pose, and
+      clothing, since body geometry is explicitly shared via SMPL-X while facial appearance is
+      reconstructed independently per view. PoseAtlas currently focuses on single-person scenes
+      and does not model multi-person interaction, overlap, or occlusion.
+    </p>
+  </section>
+
+  <section id="code">
+    <h2>Data &amp; Code</h2>
+    <p>
+      The PoseAtlas dataset and generation code will be released for non-commercial research use
+      upon publication, including rendered images, SMPL-X parameters, camera parameters,
+      identity/pose manifests, and an accompanying datasheet. This page will be updated with the
+      dataset and repository links.
+    </p>
+  </section>
+
+  <section id="bibtex">
+    <h2>BibTeX</h2>
+    <pre><code>@inproceedings{poseatlas2027,
+  title     = {PoseAtlas: A Multi-View Synthetic Human Dataset with Geometrically Grounded Poses for 3D Pose Estimation},
+  author    = {PoseAtlas Authors},
+  booktitle = {Proceedings of the IEEE/CVF Winter Conference on Applications of Computer Vision (WACV)},
+  year      = {2027}
+}</code></pre>
+  </section>
+
+  <footer>
+    PoseAtlas &middot; WACV 2027
+  </footer>
+
+</div>
+</body>
+</html>
