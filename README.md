@@ -7,7 +7,7 @@
 <p>
   <a href="https://wjmenu.github.io/PoseAtlas/"><img src="https://img.shields.io/badge/Project-Page-green" alt="Project Page"></a>
   <img src="https://img.shields.io/badge/Paper-coming%20soon-lightgrey" alt="Paper coming soon">
-  <img src="https://img.shields.io/badge/%F0%9F%A4%97%20Dataset-coming%20soon-lightgrey" alt="Dataset coming soon">
+  <a href="https://huggingface.co/datasets/wjmenu/PoseAtlas"><img src="https://img.shields.io/badge/%F0%9F%A4%97%20HuggingFace-Dataset-ffbd45" alt="HuggingFace Dataset"></a>
   <img src="https://img.shields.io/badge/Code-coming%20soon-lightgrey" alt="Code coming soon">
 </p>
 
