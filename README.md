@@ -2,7 +2,7 @@
 
 **A Multi-View Synthetic Human Dataset with Geometrically Grounded Poses for 3D Pose Estimation**
 
-*WACV 2027 — Datasets Track*
+*[HOUR Workshop @ WACV 2027](https://hour-workshop.github.io/wacv2027/) — Dataset Track*
 
 <p>
   <a href="https://wjmenu.github.io/PoseAtlas/"><img src="https://img.shields.io/badge/Project-Page-green" alt="Project Page"></a>
@@ -142,7 +142,7 @@ estimation, 3D human perception, and related computer vision applications.
 @inproceedings{poseatlas2027,
   title     = {PoseAtlas: A Multi-View Synthetic Human Dataset with Geometrically Grounded Poses for 3D Pose Estimation},
   author    = {PoseAtlas Authors},
-  booktitle = {Proceedings of the IEEE/CVF Winter Conference on Applications of Computer Vision (WACV)},
+  booktitle = {Proceedings of the IEEE/CVF Winter Conference on Applications of Computer Vision (WACV) Workshops},
   year      = {2027}
 }
 ```
